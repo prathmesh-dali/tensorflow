@@ -37,6 +37,7 @@ limitations under the License.
 #include <fstream>
 #include <utility>
 #include <vector>
+#include <chrono>
 
 #include "tensorflow/cc/ops/const_op.h"
 #include "tensorflow/cc/ops/image_ops.h"
@@ -64,7 +65,8 @@ using tensorflow::Tensor;
 using tensorflow::Status;
 using tensorflow::string;
 using tensorflow::int32;
-
+using namespace std;
+using namespace std::chrono;
 // Takes a file name, and loads a list of labels from it, one per line, and
 // returns a vector of the strings. It pads with empty strings so the length
 // of the result is a multiple of 16, because our model expects that.
@@ -277,8 +279,9 @@ int main(int argc, char* argv[]) {
   // These are the command-line flags the program can understand.
   // They define where the graph and input data is located, and what kind of
   // input the model expects. If you train your own model, or use something
-  // other than inception_v3, then you'll need to update these.
-  string image = "tensorflow/examples/label_image/data/grace_hopper.jpg";
+  // other than inception_v3, then you'll need to update these
+  high_resolution_clock::time_point t0 = high_resolution_clock::now();
+  string image[2] = {"tensorflow/examples/label_image/data/grace_hopper.jpg","tensorflow/examples/label_image/data/mortarboard_polyester.jpg"} ;
   string graph =
       "tensorflow/examples/label_image/data/inception_v3_2016_08_28_frozen.pb";
   string labels =
@@ -292,7 +295,7 @@ int main(int argc, char* argv[]) {
   bool self_test = false;
   string root_dir = "";
   std::vector<Flag> flag_list = {
-      Flag("image", &image, "image to be processed"),
+    //  Flag("image", &image, "image to be processed"),
       Flag("graph", &graph, "graph to be executed"),
       Flag("labels", &labels, "name of file containing labels"),
       Flag("input_width", &input_width, "resize image to this width in pixels"),
@@ -331,22 +334,32 @@ int main(int argc, char* argv[]) {
 
   // Get the image from disk as a float array of numbers, resized and normalized
   // to the specifications the main graph expects.
-  std::vector<Tensor> resized_tensors;
-  string image_path = tensorflow::io::JoinPath(root_dir, image);
-  Status read_tensor_status =
+  std::vector<Tensor> resized_tensors[2];
+  Status read_tensor_status;
+  for(int i =0; i<2; i++){
+    string  image_path = tensorflow::io::JoinPath(root_dir, image[i]);
+    read_tensor_status =
       ReadTensorFromImageFile(image_path, input_height, input_width, input_mean,
-                              input_std, &resized_tensors);
+                              input_std, &resized_tensors[i]);
+  }
   if (!read_tensor_status.ok()) {
     LOG(ERROR) << read_tensor_status;
     return -1;
   }
-  const Tensor& resized_tensor = resized_tensors[0];
+  Status run_status;
+  for(int i =0; i<2; i++){
+    const Tensor& resized_tensor = resized_tensors[i][0];
 
   // Actually run the image through the model.
-  std::vector<Tensor> outputs;
-  Status run_status = session->Run({{input_layer, resized_tensor}},
+    std::vector<Tensor> outputs;
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
+    run_status = session->Run({{input_layer, resized_tensor}},
                                    {output_layer}, {}, &outputs);
-  if (!run_status.ok()) {
+    high_resolution_clock::time_point t2 = high_resolution_clock::now();
+    auto duration = duration_cast<nanoseconds>(t2-t1).count();
+    LOG(INFO)<<"Run Time: "<< duration<<" nanoseconds";
+  }
+ /* if (!run_status.ok()) {
     LOG(ERROR) << "Running model failed: " << run_status;
     return -1;
   }
@@ -372,7 +385,9 @@ int main(int argc, char* argv[]) {
   if (!print_status.ok()) {
     LOG(ERROR) << "Running print failed: " << print_status;
     return -1;
-  }
-
+  }*/
+  high_resolution_clock::time_point t3 = high_resolution_clock::now();
+  auto dura = duration_cast<nanoseconds>(t3-t0).count();
+  LOG(INFO)<<"Execution Time: "<<dura<<" nanoseconds";
   return 0;
 }

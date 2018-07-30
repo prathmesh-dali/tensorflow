@@ -21,7 +21,7 @@ import argparse
 
 import numpy as np
 import tensorflow as tf
-
+import time
 
 def load_graph(model_file):
   graph = tf.Graph()
@@ -73,10 +73,11 @@ def load_labels(label_file):
 
 
 if __name__ == "__main__":
-  file_name = "tensorflow/examples/label_image/data/grace_hopper.jpg"
+  start_time = time.time()
+  file_name = ["/home/ubuntu/tensorflow/tensorflow/examples/label_image/data/grace_hopper.jpg","/home/ubuntu/tensorflow/tensorflow/examples/label_image/data/mortarboard_polyester.jpg"]
   model_file = \
-    "tensorflow/examples/label_image/data/inception_v3_2016_08_28_frozen.pb"
-  label_file = "tensorflow/examples/label_image/data/imagenet_slim_labels.txt"
+    "/home/ubuntu/tensorflow/tensorflow/examples/label_image/data/inception_v3_2016_08_28_frozen.pb"
+  label_file = "/home/ubuntu/tensorflow/tensorflow/examples/label_image/data/imagenet_slim_labels.txt"
   input_height = 299
   input_width = 299
   input_mean = 0
@@ -116,12 +117,14 @@ if __name__ == "__main__":
     output_layer = args.output_layer
 
   graph = load_graph(model_file)
-  t = read_tensor_from_image_file(
-      file_name,
-      input_height=input_height,
-      input_width=input_width,
-      input_mean=input_mean,
-      input_std=input_std)
+  t = [0,0]
+  for i in range(len(file_name)):
+    t[i] = read_tensor_from_image_file(
+        file_name[i],
+        input_height=input_height,
+        input_width=input_width,
+        input_mean=input_mean,
+        input_std=input_std)
 
   input_name = "import/" + input_layer
   output_name = "import/" + output_layer
@@ -129,12 +132,16 @@ if __name__ == "__main__":
   output_operation = graph.get_operation_by_name(output_name)
 
   with tf.Session(graph=graph) as sess:
-    results = sess.run(output_operation.outputs[0], {
-        input_operation.outputs[0]: t
-    })
-  results = np.squeeze(results)
+    for i in range(len(t)):
+      run_time = time.time()
+      results = sess.run(output_operation.outputs[0], {
+          input_operation.outputs[0]: t[i]
+      })
+      print("---Run Time: %s seconds ---"% (time.time()-run_time))
+  #results = np.squeeze(results)
 
-  top_k = results.argsort()[-5:][::-1]
-  labels = load_labels(label_file)
-  for i in top_k:
-    print(labels[i], results[i])
+  #top_k = results.argsort()[-5:][::-1]
+  #labels = load_labels(label_file)
+  #for i in top_k:
+   # print(labels[i], results[i])
+  print("---Execution time: %s seconds ---"%(time.time()-start_time))
