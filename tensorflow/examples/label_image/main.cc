@@ -281,7 +281,7 @@ int main(int argc, char* argv[]) {
   // input the model expects. If you train your own model, or use something
   // other than inception_v3, then you'll need to update these
   high_resolution_clock::time_point t0 = high_resolution_clock::now();
-  int32 no_of_images = 10;
+  const int32 no_of_images = 10;
   string image[no_of_images] = {"tensorflow/examples/label_image/data/1.jpg","tensorflow/examples/label_image/data/2.jpg","tensorflow/examples/label_image/data/3.jpg","tensorflow/examples/label_image/data/4.jpg","tensorflow/examples/label_image/data/5.jpg","tensorflow/examples/label_image/data/6.jpg","tensorflow/examples/label_image/data/7.jpg","tensorflow/examples/label_image/data/8.jpg","tensorflow/examples/label_image/data/9.jpg","tensorflow/examples/label_image/data/10.jpg"} ;
   string graph =
       "tensorflow/examples/label_image/data/inception_v3_2016_08_28_frozen.pb";
@@ -358,7 +358,7 @@ int main(int argc, char* argv[]) {
                                    {output_layer}, {}, &outputs);
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     auto duration = duration_cast<nanoseconds>(t2-t1).count();
-    LOG(INFO)<<"Run Time: "<< duration<<" nanoseconds";
+    LOG(INFO)<<"Run Time: "<<((float) duration)/1000000000.0<<" seconds";
     PrintTopLabels(outputs, labels);
     LOG(INFO)<<"--------------------------------------";
   }
@@ -390,7 +390,7 @@ int main(int argc, char* argv[]) {
     return -1;
   }*/
   high_resolution_clock::time_point t3 = high_resolution_clock::now();
-  auto dura = duration_cast<nanoseconds>(t3-t0).count();
-  LOG(INFO)<<"Execution Time: "<<dura<<" nanoseconds";
+  auto dura = duration_cast<milliseconds>(t3-t0).count();
+  LOG(INFO)<<"Execution Time: "<<((float)dura)/1000000000.0<<" seconds";
   return 0;
 }

@@ -1,0 +1,71 @@
+---Run Time: 6.367505788803101 seconds ---
+---Run Time: 0.054210662841796875 seconds ---
+---Run Time: 0.05406069755554199 seconds ---
+---Run Time: 0.05369377136230469 seconds ---
+---Run Time: 0.07098889350891113 seconds ---
+---Run Time: 0.0799109935760498 seconds ---
+---Run Time: 0.0640263557434082 seconds ---
+---Run Time: 0.05994868278503418 seconds ---
+---Run Time: 0.06789922714233398 seconds ---
+---Run Time: 0.06402754783630371 seconds ---
+pickelhaube 0.96144116
+crash helmet 0.0010662527
+chain mail 0.00040317085
+bearskin 0.00035250117
+table lamp 0.00021158048
+--------------------------------------------
+otterhound 0.9611494
+vizsla 0.010332176
+Irish wolfhound 0.0032028535
+bloodhound 0.00075686374
+clumber 0.00075275206
+--------------------------------------------
+gong 0.6066378
+chime 0.3866357
+bulbul 0.000103370134
+loudspeaker 6.7324945e-05
+drum 3.7053676e-05
+--------------------------------------------
+hard disc 0.9865435
+CD player 0.0007000125
+dial telephone 0.000494352
+miniature pinscher 0.0004645921
+screw 0.00037542864
+--------------------------------------------
+bearskin 1.0
+military uniform 5.06522e-09
+jinrikisha 8.533989e-10
+pickelhaube 4.89891e-10
+hyena 4.2628848e-10
+--------------------------------------------
+mortarboard 0.99743253
+academic gown 0.0025656624
+otterhound 1.358238e-07
+crash helmet 8.6264656e-08
+hard disc 4.8937334e-08
+--------------------------------------------
+vizsla 0.96959275
+Rhodesian ridgeback 0.0025599138
+redbone 0.001357465
+Weimaraner 0.0008603458
+Ibizan hound 0.000436849
+--------------------------------------------
+military uniform 0.83430576
+mortarboard 0.021869507
+academic gown 0.010358065
+pickelhaube 0.00800825
+bulletproof vest 0.005350903
+--------------------------------------------
+mountain bike 0.8820171
+disk brake 0.051652826
+crash helmet 0.001774788
+sleeping bag 0.0012171828
+vault 0.00086466654
+--------------------------------------------
+screw 0.9552217
+nail 0.0041674026
+coil 0.0007728597
+plunger 0.00072835945
+diamondback 0.0004274915
+--------------------------------------------
+---Execution time: 10.526187658309937 seconds ---
