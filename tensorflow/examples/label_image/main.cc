@@ -281,7 +281,8 @@ int main(int argc, char* argv[]) {
   // input the model expects. If you train your own model, or use something
   // other than inception_v3, then you'll need to update these
   high_resolution_clock::time_point t0 = high_resolution_clock::now();
-  string image[2] = {"tensorflow/examples/label_image/data/grace_hopper.jpg","tensorflow/examples/label_image/data/mortarboard_polyester.jpg"} ;
+  int32 no_of_images = 10;
+  string image[no_of_images] = {"tensorflow/examples/label_image/data/1.jpg","tensorflow/examples/label_image/data/2.jpg","tensorflow/examples/label_image/data/3.jpg","tensorflow/examples/label_image/data/4.jpg","tensorflow/examples/label_image/data/5.jpg","tensorflow/examples/label_image/data/6.jpg","tensorflow/examples/label_image/data/7.jpg","tensorflow/examples/label_image/data/8.jpg","tensorflow/examples/label_image/data/9.jpg","tensorflow/examples/label_image/data/10.jpg"} ;
   string graph =
       "tensorflow/examples/label_image/data/inception_v3_2016_08_28_frozen.pb";
   string labels =
@@ -334,9 +335,9 @@ int main(int argc, char* argv[]) {
 
   // Get the image from disk as a float array of numbers, resized and normalized
   // to the specifications the main graph expects.
-  std::vector<Tensor> resized_tensors[2];
+  std::vector<Tensor> resized_tensors[no_of_images];
   Status read_tensor_status;
-  for(int i =0; i<2; i++){
+  for(int i =0; i<no_of_images; i++){
     string  image_path = tensorflow::io::JoinPath(root_dir, image[i]);
     read_tensor_status =
       ReadTensorFromImageFile(image_path, input_height, input_width, input_mean,
@@ -347,7 +348,7 @@ int main(int argc, char* argv[]) {
     return -1;
   }
   Status run_status;
-  for(int i =0; i<2; i++){
+  for(int i =0; i<no_of_images; i++){
     const Tensor& resized_tensor = resized_tensors[i][0];
 
   // Actually run the image through the model.
@@ -358,6 +359,8 @@ int main(int argc, char* argv[]) {
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
     auto duration = duration_cast<nanoseconds>(t2-t1).count();
     LOG(INFO)<<"Run Time: "<< duration<<" nanoseconds";
+    PrintTopLabels(outputs, labels);
+    LOG(INFO)<<"--------------------------------------";
   }
  /* if (!run_status.ok()) {
     LOG(ERROR) << "Running model failed: " << run_status;
